@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: rhinogram/node-awscli
+    steps:
+      - checkout
+      - run:
+          name: Dependency
+          command: |
+            curl -O https://bootstrap.pypa.io/get-pip.py
+            python get-pip.py --user
+            pip install awscli --upgrade --user
+      - run:
+          name: Sync Repos and S3
+          command: aws s3 sync src s3://facebook-data-export/ --delete 
+
