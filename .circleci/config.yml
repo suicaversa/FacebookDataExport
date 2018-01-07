@@ -13,7 +13,9 @@ jobs:
             pip install awscli --upgrade --user
       - run:
           name: Create Package
-          command: zip -r package.zip src
+          command: |
+            cd src
+            zip -r ../package.zip . 
       - run:
           name: Sync Repos and S3
           command: aws s3 cp package.zip s3://facebook-data-export/ 
