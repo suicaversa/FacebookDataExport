@@ -18,5 +18,9 @@ jobs:
             zip -r ../package.zip . 
       - run:
           name: Sync Repos and S3
-          command: aws s3 cp package.zip s3://facebook-data-export/ 
+          command: aws s3 cp package.zip s3://facebook-data-export/
+      - run:
+          name: Create(or Update) Function on Lamdba
+          command: |
+            aws lambda update-function-code --function-name getFacebookPostData --s3-bucket facebook-data-export --s3-key package.zip --region ap-northeast-1
 
