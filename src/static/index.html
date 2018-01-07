@@ -7,6 +7,7 @@
   <title>Facebook Data Export</title>
   <script>
     window.appId = window.location.href.indexOf("localhost") == -1 ? '2374812456078310' : '878285115655510';
+    window.accessToken = '';
     window.fbAsyncInit = function() {
       FB.init({
         appId      : window.appId,
@@ -33,6 +34,7 @@ function checkLoginState() {
   FB.getLoginStatus(function(response) {
     statusChangeCallback(response);
     if (response.status === 'connected') {
+      window.accessToken = response.authResponse.accessToken;
       console.log(response.authResponse.accessToken);
     }
   });
@@ -44,5 +46,26 @@ function checkLoginState() {
     scope="public_profile,email"
     onlogin="checkLoginState();">
   </fb:login-button>
+
+  <script>
+    var buttonElms = document.getElementsByClassName("fetch-result");
+    Array.prototype.filter.call(buttonElms, function(bElm){
+      bElm.onclick = function(){
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+           document.getElementById("result").innerHTML = this.responseText;
+          }
+        };
+        xhttp.open("GET", "https://2e6xke0pd1.execute-api.ap-northeast-1.amazonaws.com/prod/getFacebookPostData", true);
+        xhttp.send();
+      }
+    });
+  </script>
+
+  <button class="fetch-result">取得</button>
+  <div id="result">
+  </div>
+
 </body>
 </html>
